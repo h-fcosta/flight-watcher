@@ -1,14 +1,20 @@
-import os, logging
-from telegram import Bot
+import os, logging, asyncio
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-bot = Bot(token=os.getenv("TELEGRAM_TOKEN"))
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("TG_CHAT_ID")
+
 
 def send(msg):
-  try:
-    bot.send_message(chat_id=os.getenv("TG_CHAT_ID"), text=msg)
-    logging.info("Alerta enviado ao Telegram")
-  except Exception:
-    logging.exception("Falha ao enviar alerta")
+    try:
+        response = requests.post(
+            f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+            json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"},
+        )
+        response.raise_for_status()
+        logging.info("Alerta enviado ao Telegram")
+    except Exception as e:
+        logging.exception(f"Falha ao enviar alerta: {e}")
