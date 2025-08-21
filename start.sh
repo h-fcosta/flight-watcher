@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script de inicialização do Flight Watcher
-# Uso: ./start.sh [web|cli]
+# Uso: ./start.sh
 
 set -e
 
@@ -43,27 +43,12 @@ if ! grep -q "AMADEUS_" .env; then
     exit 1
 fi
 
-# Modo de execução
-MODE=${1:-web}
+# Iniciar aplicação web
+echo -e "${GREEN}🌐 Iniciando aplicação web...${NC}"
+echo "🔗 Acesse: http://localhost:8000"
+echo "📚 API Docs: http://localhost:8000/docs"
+echo ""
+echo -e "${YELLOW}Pressione Ctrl+C para parar${NC}"
+echo ""
 
-case $MODE in
-    "web")
-        echo -e "${GREEN}🌐 Iniciando interface web...${NC}"
-        echo "Acesse: http://localhost:8000"
-        echo "API Docs: http://localhost:8000/docs"
-        echo ""
-        echo -e "${YELLOW}Pressione Ctrl+C para parar${NC}"
-        .venv/bin/python main_api.py
-        ;;
-    "cli")
-        echo -e "${GREEN}💻 Iniciando modo linha de comando...${NC}"
-        echo -e "${YELLOW}Pressione Ctrl+C para parar${NC}"
-        .venv/bin/python main.py
-        ;;
-    *)
-        echo "Uso: $0 [web|cli]"
-        echo "  web - Interface web (padrão)"
-        echo "  cli - Linha de comando"
-        exit 1
-        ;;
-esac
+.venv/bin/python main_api.py

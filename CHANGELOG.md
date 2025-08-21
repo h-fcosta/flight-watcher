@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.1.0] - 2025-08-20
+
+### 🧹 Legacy System Cleanup
+
+#### 🗑️ Removed
+- **Legacy CLI System**: Removed `main.py` and `app/` directory
+- **Backward Compatibility**: Removed support for old environment variables
+- **Old Documentation**: Cleaned up README and removed legacy references
+- **Obsolete Files**: Removed all CLI-related code and configurations
+
+#### 🔄 Updated
+- **Simplified Configuration**: Removed legacy variable support from `config.py`
+- **Clean Documentation**: Updated README with modern, streamlined instructions
+- **Startup Script**: Simplified `start.sh` to only support web interface
+- **Environment Example**: Cleaned up `.env.example` to show only current variables
+
+#### ✨ Result
+- **Single Interface**: Web-only application, no CLI confusion
+- **Cleaner Codebase**: Removed thousands of lines of legacy code
+- **Simplified Setup**: One way to run the application
+- **Modern Focus**: Pure FastAPI web application
+
+---
+
 ## [2.0.0] - 2025-08-20
 
 ### 🚀 Major Refactoring - FastAPI Web Interface
@@ -19,25 +43,7 @@
 - **Export Functionality**: CSV export for deals and statistics
 - **Search Interface**: Manual flight search directly from dashboard
 
-#### 🔄 Changed
-- **Architecture**: Migrated from CLI-based to web-based architecture
-- **Configuration**: Updated from simple env vars to Pydantic settings
-- **API Integration**: Improved Amadeus API client with better error handling
-- **Database**: Enhanced models with additional fields and relationships
-- **Notifications**: Improved Telegram service with better formatting
-- **Logging**: Enhanced logging system with structured format
-
-#### 🗑️ Removed
-- **Old Test Files**: Removed obsolete test and debug files
-  - `debug_credentials.py`
-  - `diagnose_final.py`
-  - `test_auth.py`
-  - `test_run.py`
-  - `test_telegram.py`
-  - `test_url_config.py`
-  - `fastapi_proposal.py`
-
-#### 🔧 Technical Details
+####  Technical Details
 - **Framework**: FastAPI with Uvicorn server
 - **Frontend**: HTML5, Bootstrap 5, Vanilla JavaScript
 - **Database**: SQLAlchemy 2.0 with SQLite
@@ -46,11 +52,12 @@
 - **Charts**: Plotly.js for data visualization
 - **Responsive**: Mobile-first design approach
 
-#### 📂 New File Structure
+#### 📂 File Structure
 ```
 flight-watcher/
 ├── main_api.py              # FastAPI application entry point
 ├── config.py                # Centralized configuration
+├── start.sh                 # Startup script
 ├── api/
 │   ├── database.py         # Database configuration
 │   ├── models.py           # SQLAlchemy models
@@ -58,26 +65,17 @@ flight-watcher/
 │   ├── services/           # Business logic
 │   └── schemas/            # Pydantic schemas
 ├── templates/              # Jinja2 templates
-├── static/                 # CSS, JS, and assets
-└── app/                    # Legacy CLI system (preserved)
+└── static/                 # CSS, JS, and assets
 ```
 
-#### 🔄 Migration Notes
-- Legacy `main.py` CLI system is preserved for compatibility
-- Environment variables updated (see `.env.example`)
-- Database schema is backward compatible
-- All existing data is preserved during migration
-
 #### 🚀 Usage
-- **Web Interface**: `python main_api.py` → http://localhost:8000
-- **Legacy CLI**: `python main.py` (still available)
+- **Web Interface**: `./start.sh` → http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
-
----
 
 ## [1.0.0] - Previous Version
 
 ### Features
+
 - Command-line flight price monitoring
 - Amadeus API integration
 - Telegram bot notifications
@@ -86,6 +84,7 @@ flight-watcher/
 - Basic route management via Telegram commands
 
 ### Architecture
+
 - Single-file CLI application
 - Blocking scheduler
 - Simple environment variable configuration

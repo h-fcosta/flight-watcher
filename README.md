@@ -1,6 +1,6 @@
 # 🛫 Flight Watcher
 
-Sistema de monitoramento de preços de passagens aéreas com interface web moderna e notificações automáticas.
+Sistema moderno de monitoramento de preços de passagens aéreas com interface web e notificações automáticas.
 
 ## ✨ Funcionalidades
 
@@ -12,200 +12,155 @@ Sistema de monitoramento de preços de passagens aéreas com interface web moder
 - 💰 **Detecção de Promoções**: Alertas quando preços ficam abaixo do limite
 - 📤 **Exportação de Dados**: Export em CSV das promoções encontradas
 
-## 🚀 Instalação
+## 🚀 Instalação Rápida
 
-### 1. Clonar o repositório
+### 1. Clonar e configurar
+
 ```bash
 git clone https://github.com/h-fcosta/flight-watcher.git
 cd flight-watcher
-```
-
-### 2. Criar ambiente virtual
-```bash
 python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-# ou
-.venv\Scripts\activate     # Windows
-```
-
-### 3. Instalar dependências
-```bash
+source .venv/bin/activate  # Linux/Mac ou .venv\Scripts\activate no Windows
 pip install -r requirements.txt
 ```
 
-### 4. Configurar variáveis de ambiente
-Copie o arquivo `.env.example` para `.env` e configure:
+### 2. Configurar credenciais
 
 ```bash
 cp .env.example .env
+# Edite o arquivo .env com suas credenciais
 ```
 
-Edite o arquivo `.env` com suas credenciais:
+### 3. Executar
 
-```env
-# Configurações da API Amadeus (obrigatório)
-AMADEUS_CLIENT_ID=seu_client_id_aqui
-AMADEUS_CLIENT_SECRET=seu_client_secret_aqui
-AMADEUS_ENV=test  # test ou production
-
-# Configurações do Telegram (opcional)
-TELEGRAM_BOT_TOKEN=seu_bot_token_aqui
-TELEGRAM_CHAT_ID=seu_chat_id_aqui
-
-# Configurações da aplicação
-DATABASE_URL=sqlite:///./prices.db
-SECRET_KEY=uma_chave_secreta_qualquer
-
-# Configurações do servidor (opcional)
-HOST=0.0.0.0
-PORT=8000
-DEBUG=true
-```
-
-### 5. Executar a aplicação
-
-#### Interface Web (Recomendado)
 ```bash
-python main_api.py
-```
-Acesse: http://localhost:8000
-
-#### Linha de Comando (Sistema Legado)
-```bash
-python main.py
+./start.sh
 ```
 
-## 🔧 Configuração da API Amadeus
+**Acesse: http://localhost:8000**
+
+## 🔧 Configuração
+
+### API Amadeus (Obrigatório)
 
 1. Crie uma conta em [Amadeus for Developers](https://developers.amadeus.com/)
 2. Crie uma nova aplicação
-3. Copie o `Client ID` e `Client Secret`
-4. Use `test` para desenvolvimento e `production` para uso real
+3. Configure no arquivo `.env`:
 
-## 📱 Configuração do Telegram (Opcional)
+```env
+AMADEUS_CLIENT_ID=seu_client_id_aqui
+AMADEUS_CLIENT_SECRET=seu_client_secret_aqui
+AMADEUS_ENV=test  # ou production
+```
+
+### Telegram (Opcional)
 
 1. Crie um bot via [@BotFather](https://t.me/botfather)
-2. Copie o token do bot
-3. Envie uma mensagem para o bot e obtenha seu chat ID
-4. Configure as variáveis no `.env`
+2. Configure no arquivo `.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=seu_bot_token_aqui
+TELEGRAM_CHAT_ID=seu_chat_id_aqui
+```
 
 ## 🌐 Interface Web
 
 ### Dashboard Principal
-- Visão geral do sistema
-- Estatísticas em tempo real
-- Busca manual de voos
-- Status do monitoramento
+
+- **Visão Geral**: Estatísticas em tempo real do sistema
+- **Busca Manual**: Pesquise voos diretamente na interface
+- **Status**: Monitore o funcionamento do sistema
+- **Auto-refresh**: Atualizações automáticas dos dados
 
 ### Gerenciamento de Rotas
-- Adicionar/editar/remover rotas
-- Ativar/desativar monitoramento
-- Filtros e ordenação
-- Validação em tempo real
+
+- **Adicionar Rotas**: Defina origem, destino, data e limite de preço
+- **Editar/Excluir**: Gerencie suas rotas existentes
+- **Ativar/Pausar**: Controle quais rotas são monitoradas
+- **Filtros**: Encontre rotas específicas rapidamente
 
 ### Promoções
-- Lista de todas as promoções encontradas
-- Filtros avançados por origem, destino, preço
-- Detalhes completos de cada promoção
-- Exportação em CSV
 
-## 🔄 Como Usar
+- **Lista Completa**: Todas as ofertas encontradas
+- **Filtros Avançados**: Por origem, destino, preço, data
+- **Detalhes**: Informações completas de cada promoção
+- **Exportar**: Baixe dados em formato CSV
 
-### 1. Adicionar uma Rota
-1. Acesse a aba "Rotas"
-2. Clique em "Nova Rota"
-3. Preencha origem, destino, data e limite de preço
-4. Salve a rota
+## 🔄 Como Funciona
 
-### 2. Monitorar Preços
-O sistema verifica automaticamente os preços a cada 6 horas e:
-- Salva todos os preços no banco de dados
-- Detecta quando um preço fica abaixo do limite
-- Envia notificação via Telegram (se configurado)
-- Registra como promoção no dashboard
-
-### 3. Ver Promoções
-- Acesse a aba "Promoções"
-- Veja todas as ofertas encontradas
-- Filtre por critérios específicos
-- Exporte os dados se necessário
+1. **Configure suas rotas** de interesse com limite de preço
+2. **O sistema verifica automaticamente** os preços a cada 6 horas
+3. **Quando encontra um preço abaixo do limite**:
+   - Salva como promoção no dashboard
+   - Envia notificação via Telegram (se configurado)
+   - Registra no histórico para análise
 
 ## 📊 API REST
 
-A aplicação oferece uma API REST completa:
+Documentação completa em: **http://localhost:8000/docs**
+
+Principais endpoints:
 
 - `GET /api/routes` - Listar rotas
 - `POST /api/routes` - Criar rota
-- `PUT /api/routes/{id}` - Atualizar rota
-- `DELETE /api/routes/{id}` - Excluir rota
-- `GET /api/prices` - Histórico de preços
 - `GET /api/deals` - Promoções encontradas
+- `GET /api/prices` - Histórico de preços
 - `GET /api/status/health` - Status do sistema
-
-Documentação completa: http://localhost:8000/docs
 
 ## 🏗️ Arquitetura
 
 ```
 flight-watcher/
 ├── main_api.py              # Aplicação FastAPI principal
-├── main.py                  # Sistema legado (linha de comando)
 ├── config.py                # Configurações centralizadas
-├── requirements.txt         # Dependências
+├── start.sh                 # Script de inicialização
 ├── api/
 │   ├── database.py         # Configuração do banco
 │   ├── models.py           # Modelos SQLAlchemy
 │   ├── routers/            # Endpoints da API
-│   │   ├── routes.py       # CRUD de rotas
-│   │   ├── prices.py       # Histórico de preços
-│   │   ├── deals.py        # Promoções
-│   │   └── status.py       # Status do sistema
 │   ├── services/           # Lógica de negócio
-│   │   ├── amadeus.py      # Cliente API Amadeus
-│   │   ├── telegram.py     # Notificações
-│   │   ├── alerts.py       # Detecção de promoções
-│   │   └── scheduler.py    # Jobs automáticos
 │   └── schemas/            # Validação Pydantic
-├── templates/              # Templates HTML
-│   ├── base.html
-│   ├── dashboard.html
-│   ├── routes.html
-│   └── deals.html
-├── static/                 # Arquivos estáticos
-│   ├── css/style.css
-│   └── js/
-│       ├── app.js
-│       ├── dashboard.js
-│       ├── routes.js
-│       └── deals.js
-└── app/                    # Sistema legado
-    ├── fetcher.py
-    ├── models.py
-    └── ...
+├── templates/              # Interface web (HTML)
+└── static/                 # Assets (CSS, JS)
 ```
 
 ## 🛠️ Desenvolvimento
 
-### Executar em modo de desenvolvimento
+### Executar em modo desenvolvimento
+
 ```bash
 python main_api.py
 ```
 
 ### Logs
-Os logs são salvos em `logs/flightbot.log` com rotação automática.
+
+Verifique os logs em `logs/flightbot.log`
+
+### Banco de dados
+
+SQLite em `prices.db` (criado automaticamente)
+
+## ❓ Solução de Problemas
+
+**Erro de credenciais:**
+
+- Verifique se `AMADEUS_CLIENT_ID` e `AMADEUS_CLIENT_SECRET` estão corretos
+- Confirme se `AMADEUS_ENV` está como `test` para desenvolvimento
+
+**Sem notificações:**
+
+- Configure `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` no `.env`
+- Teste enviando `/start` para o bot
+
+**Interface não carrega:**
+
+- Verifique se as dependências estão instaladas: `pip install -r requirements.txt`
+- Confirme que a porta 8000 não está sendo usada
 
 ## 📝 Licença
 
-Este projeto é de código aberto. Sinta-se livre para usar e modificar.
+Este projeto é de código aberto. Use e modifique livremente.
 
 ## 🤝 Contribuições
 
 Contribuições são bem-vindas! Abra uma issue ou envie um pull request.
-
-## ❓ Suporte
-
-Para dúvidas ou problemas:
-1. Verifique os logs em `logs/flightbot.log`
-2. Confirme se as variáveis de ambiente estão corretas
-3. Teste a conectividade com a API Amadeus
-4. Abra uma issue no GitHub
