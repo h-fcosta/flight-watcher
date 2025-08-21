@@ -12,6 +12,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.
 Esta é a primeira versão estável do Flight Watcher, com todas as funcionalidades principais implementadas e testadas.
 
 #### ✨ Adicionado
+
 - **Sistema completo de monitoramento**: Busca automática de preços a cada 6 horas
 - **Interface web responsiva**: Dashboard moderno com Bootstrap 5
 - **Busca automática ao criar rotas**: Preços são buscados imediatamente após criação
@@ -26,9 +27,10 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 - **Health checks**: Endpoints de monitoramento do sistema
 
 #### 🛠️ Técnico
+
 - **FastAPI**: Framework principal para API REST
 - **SQLAlchemy 2.0**: ORM moderno com suporte a async
-- **APScheduler**: Agendamento de tarefas automáticas  
+- **APScheduler**: Agendamento de tarefas automáticas
 - **Amadeus API**: Integração para dados reais de voos
 - **Bootstrap 5**: Interface moderna e responsiva
 - **JavaScript ES6+**: Frontend interativo
@@ -37,6 +39,7 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 - **Uvicorn**: Servidor ASGI de alta performance
 
 #### 📊 Estatísticas v1.0.0
+
 - **3 módulos principais**: Rotas, Preços, Status
 - **15+ endpoints REST**: API completa documentada
 - **3 páginas web**: Dashboard, Rotas, Promoções
@@ -44,6 +47,7 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 - **Cobertura completa**: Frontend + Backend + Documentação
 
 #### 🎯 Funcionalidades Principais
+
 1. **Criação de Rotas**: Formulário intuitivo com validação
 2. **Monitoramento Automático**: Scheduler executando a cada 6 horas
 3. **Detecção de Promoções**: Algoritmo baseado em histórico de preços
@@ -52,6 +56,7 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 6. **Busca Manual**: Controle total pelo usuário quando necessário
 
 #### 🔧 Configuração
+
 - **Variáveis de ambiente**: Configuração flexível via `.env`
 - **Amadeus API**: Suporte a ambientes test e production
 - **Telegram opcional**: Sistema funciona sem notificações
@@ -64,18 +69,21 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 ### 🧹 Legacy System Cleanup
 
 #### 🗑️ Removed
+
 - **Legacy CLI System**: Removed `main.py` and `app/` directory
 - **Backward Compatibility**: Removed support for old environment variables
 - **Old Documentation**: Cleaned up README and removed legacy references
 - **Obsolete Files**: Removed all CLI-related code and configurations
 
 #### 🔄 Updated
+
 - **Simplified Configuration**: Removed legacy variable support from `config.py`
 - **Clean Documentation**: Updated README with modern, streamlined instructions
 - **Startup Script**: Simplified `start.sh` to only support web interface
 - **Environment Example**: Cleaned up `.env.example` to show only current variables
 
 #### ✨ Result
+
 - **Single Interface**: Web-only application, no CLI confusion
 - **Cleaner Codebase**: Removed thousands of lines of legacy code
 - **Simplified Setup**: One way to run the application
@@ -88,6 +96,7 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 ### 🚀 Major Refactoring - FastAPI Web Interface
 
 #### ✅ Added
+
 - **FastAPI Web Application**: Complete web interface replacing command-line interface
 - **Modern Dashboard**: Real-time monitoring with statistics and charts
 - **Route Management**: Full CRUD interface for flight routes
@@ -102,7 +111,8 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 - **Export Functionality**: CSV export for deals and statistics
 - **Search Interface**: Manual flight search directly from dashboard
 
-####  Technical Details
+#### Technical Details
+
 - **Framework**: FastAPI with Uvicorn server
 - **Frontend**: HTML5, Bootstrap 5, Vanilla JavaScript
 - **Database**: SQLAlchemy 2.0 with SQLite
@@ -112,6 +122,7 @@ Esta é a primeira versão estável do Flight Watcher, com todas as funcionalida
 - **Responsive**: Mobile-first design approach
 
 #### 📂 File Structure
+
 ```
 flight-watcher/
 ├── main_api.py              # FastAPI application entry point
@@ -128,6 +139,7 @@ flight-watcher/
 ```
 
 #### 🚀 Usage
+
 - **Web Interface**: `./start.sh` → http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
 
