@@ -7,7 +7,7 @@ from pathlib import Path
 class Settings(BaseSettings):
     # Configurações do FastAPI
     app_name: str = "Flight Watcher"
-    app_version: str = "2.0.0"
+    app_version: str = "1.0.0"
     debug: bool = True
 
     # Configurações do banco de dados

@@ -1,6 +1,65 @@
 # Changelog
 
-## [2.1.0] - 2025-08-20
+Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
+
+O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
+e este projeto adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2025-08-21
+
+### 🎉 Primeira Versão Estável
+
+Esta é a primeira versão estável do Flight Watcher, com todas as funcionalidades principais implementadas e testadas.
+
+#### ✨ Adicionado
+- **Sistema completo de monitoramento**: Busca automática de preços a cada 6 horas
+- **Interface web responsiva**: Dashboard moderno com Bootstrap 5
+- **Busca automática ao criar rotas**: Preços são buscados imediatamente após criação
+- **API RESTful completa**: Documentação com Swagger/OpenAPI
+- **Sistema de alertas via Telegram**: Notificações automáticas de promoções
+- **Histórico de preços**: Armazenamento e visualização de tendências
+- **Gerenciamento de rotas**: CRUD completo via interface web
+- **Indicadores visuais**: Feedback em tempo real para o usuário
+- **Busca manual de preços**: Botão para busca sob demanda
+- **Validação robusta**: Validação de códigos IATA e datas
+- **Logs estruturados**: Sistema completo de logging
+- **Health checks**: Endpoints de monitoramento do sistema
+
+#### 🛠️ Técnico
+- **FastAPI**: Framework principal para API REST
+- **SQLAlchemy 2.0**: ORM moderno com suporte a async
+- **APScheduler**: Agendamento de tarefas automáticas  
+- **Amadeus API**: Integração para dados reais de voos
+- **Bootstrap 5**: Interface moderna e responsiva
+- **JavaScript ES6+**: Frontend interativo
+- **SQLite**: Banco de dados leve e eficiente
+- **Pydantic**: Validação de dados robusta
+- **Uvicorn**: Servidor ASGI de alta performance
+
+#### 📊 Estatísticas v1.0.0
+- **3 módulos principais**: Rotas, Preços, Status
+- **15+ endpoints REST**: API completa documentada
+- **3 páginas web**: Dashboard, Rotas, Promoções
+- **4 serviços integrados**: Amadeus, Telegram, Scheduler, Alerts
+- **Cobertura completa**: Frontend + Backend + Documentação
+
+#### 🎯 Funcionalidades Principais
+1. **Criação de Rotas**: Formulário intuitivo com validação
+2. **Monitoramento Automático**: Scheduler executando a cada 6 horas
+3. **Detecção de Promoções**: Algoritmo baseado em histórico de preços
+4. **Alertas Inteligentes**: Notificações via Telegram quando preços caem
+5. **Dashboard Estatísticas**: Visão geral do sistema em tempo real
+6. **Busca Manual**: Controle total pelo usuário quando necessário
+
+#### 🔧 Configuração
+- **Variáveis de ambiente**: Configuração flexível via `.env`
+- **Amadeus API**: Suporte a ambientes test e production
+- **Telegram opcional**: Sistema funciona sem notificações
+- **Thresholds configuráveis**: Percentual de desconto personalizável
+
+---
+
+## [2.1.0] - 2025-08-20 (Versão de Desenvolvimento)
 
 ### 🧹 Legacy System Cleanup
 

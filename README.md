@@ -1,16 +1,35 @@
 # 🛫 Flight Watcher
 
-Sistema moderno de monitoramento de preços de passagens aéreas com interface web e notificações automáticas.
+Sistema inteligente de monitoramento de preços de passagens aéreas com alertas automáticos e interface web completa.
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Python](https://img.shields.io/badge/python-3.8+-green.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-red.svg)
+![License](https://img.shields.io/badge/license-MIT-yellow.svg)
 
 ## ✨ Funcionalidades
 
-- 🔍 **Monitoramento Automático**: Busca preços de voos automaticamente
-- 📊 **Dashboard Web**: Interface moderna e responsiva
+- 🔍 **Monitoramento Automático**: Busca preços de voos automaticamente a cada 6 horas
+- 📊 **Dashboard Web**: Interface moderna e responsiva com Bootstrap 5
 - 📱 **Notificações Telegram**: Alertas instantâneos de promoções
 - 📈 **Histórico de Preços**: Gráficos e análises detalhadas
 - 🗺️ **Gerenciamento de Rotas**: CRUD completo via interface web
 - 💰 **Detecção de Promoções**: Alertas quando preços ficam abaixo do limite
-- 📤 **Exportação de Dados**: Export em CSV das promoções encontradas
+- 🚀 **Busca Automática**: Preços são buscados automaticamente ao criar rotas
+- 📤 **API RESTful**: Documentação completa com Swagger/OpenAPI
+
+## 🎯 Sobre o Projeto
+
+O Flight Watcher é um sistema completo para monitoramento automático de preços de passagens aéreas. Utilizando a API da Amadeus, o sistema busca periodicamente os melhores preços para rotas configuradas pelo usuário e envia alertas quando encontra ofertas interessantes.
+
+### Principais Características:
+
+- ⚡ **Monitoramento em Tempo Real**: Busca automática de preços a cada 6 horas
+- 🎯 **Alertas Inteligentes**: Notificações via Telegram quando preços caem
+- 📊 **Dashboard Completo**: Interface web responsiva para gerenciamento
+- 🔄 **Busca Automática**: Preços são buscados automaticamente ao criar rotas
+- 📈 **Histórico Detalhado**: Armazenamento e visualização de tendências de preços
+- 🛠️ **API RESTful**: Documentação completa com Swagger/OpenAPI
 
 ## 🚀 Instalação Rápida
 

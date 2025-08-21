@@ -45,9 +45,39 @@ async def lifespan(app: FastAPI):
 # Criar aplicação FastAPI
 app = FastAPI(
     title=settings.app_name,
-    description="API para monitoramento de preços de passagens aéreas",
-    version=settings.app_version,
+    description="""
+    ## Flight Watcher - Sistema de Monitoramento de Preços de Passagens Aéreas
+
+    Esta API permite monitorar preços de passagens aéreas em tempo real, criando alertas quando 
+    encontra preços abaixo do esperado.
+
+    ### Principais Funcionalidades:
+    * 🛫 **Gerenciamento de Rotas**: Cadastro e controle de rotas aéreas para monitoramento
+    * 💰 **Busca Automática de Preços**: Integração com API Amadeus para obter preços em tempo real
+    * 📊 **Histórico de Preços**: Armazenamento e visualização do histórico de preços
+    * 🔔 **Sistema de Alertas**: Notificações quando preços atingem limites desejados
+    * 📈 **Dashboard Web**: Interface completa para gerenciamento via navegador
+    
+    ### Tecnologias Utilizadas:
+    * **Backend**: FastAPI + SQLAlchemy + SQLite
+    * **Frontend**: Bootstrap 5 + JavaScript
+    * **API Externa**: Amadeus API para dados de voos
+    * **Agendamento**: APScheduler para execução automática
+    * **Notificações**: Telegram Bot (opcional)
+    
+    ### Versão: 1.0.0
+    Primeira versão estável com todas as funcionalidades básicas implementadas.
+    """,
+    version="1.0.0",
     lifespan=lifespan,
+    contact={
+        "name": "Flight Watcher",
+        "url": "https://github.com/h-fcosta/flight-watcher",
+    },
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    },
 )
 
 # Configurar CORS
