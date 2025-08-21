@@ -103,7 +103,7 @@ class RoutesManager {
       .map((route) => this.renderRouteCard(route))
       .join("");
     container.innerHTML = html;
-    
+
     // Carregar preços para cada rota
     this.loadRoutePrices();
   }
@@ -128,15 +128,17 @@ class RoutesManager {
     if (!routeCard || !prices.length) return;
 
     // Encontrar o menor preço
-    const minPrice = Math.min(...prices.map(p => p.value));
+    const minPrice = Math.min(...prices.map((p) => p.value));
     const priceCount = prices.length;
-    
+
     // Atualizar a exibição
-    const priceContainer = routeCard.querySelector('.price-info');
+    const priceContainer = routeCard.querySelector(".price-info");
     if (priceContainer) {
       priceContainer.innerHTML = `
         <small class="text-success">
-          <i class="fas fa-dollar-sign"></i> Menor preço: ${Format.currency(minPrice)}
+          <i class="fas fa-dollar-sign"></i> Menor preço: ${Format.currency(
+            minPrice
+          )}
         </small><br>
         <small class="text-muted">${priceCount} preço(s) encontrado(s)</small>
       `;
@@ -169,8 +171,12 @@ class RoutesManager {
                                     <i class="fas fa-plane text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">${route.origin} → ${route.dest}</h6>
-                                    <small class="text-muted">Início: ${Format.date(route.start)}</small>
+                                    <h6 class="mb-1">${route.origin} → ${
+      route.dest
+    }</h6>
+                                    <small class="text-muted">Início: ${Format.date(
+                                      route.start
+                                    )}</small>
                                     ${endInfo}
                                 </div>
                             </div>
@@ -186,24 +192,40 @@ class RoutesManager {
                         <div class="col-md-2">
                             <div class="text-center">
                                 <small class="text-muted">Criado em</small><br>
-                                <small class="text-muted">${Format.date(new Date())}</small>
+                                <small class="text-muted">${Format.date(
+                                  new Date()
+                                )}</small>
                             </div>
                         </div>
                         <div class="col-md-3 text-end">
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-info" onclick="routes.searchPrices(${route.id})" title="Buscar preços">
+                                <button class="btn btn-sm btn-outline-info" onclick="routes.searchPrices(${
+                                  route.id
+                                })" title="Buscar preços">
                                     <i class="fas fa-search"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-primary" onclick="routes.viewPriceHistory(${route.id})" title="Ver histórico">
+                                <button class="btn btn-sm btn-outline-primary" onclick="routes.viewPriceHistory(${
+                                  route.id
+                                })" title="Ver histórico">
                                     <i class="fas fa-chart-line"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="routes.editRoute(${route.id})" title="Editar">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="routes.editRoute(${
+                                  route.id
+                                })" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="routes.toggleRoute(${route.id})" title="${route.active ? "Pausar" : "Ativar"}">
-                                    <i class="fas fa-${route.active ? "pause" : "play"}"></i>
+                                <button class="btn btn-sm btn-outline-warning" onclick="routes.toggleRoute(${
+                                  route.id
+                                })" title="${
+      route.active ? "Pausar" : "Ativar"
+    }">
+                                    <i class="fas fa-${
+                                      route.active ? "pause" : "play"
+                                    }"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="routes.deleteRoute(${route.id})" title="Excluir">
+                                <button class="btn btn-sm btn-outline-danger" onclick="routes.deleteRoute(${
+                                  route.id
+                                })" title="Excluir">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -233,7 +255,9 @@ class RoutesManager {
 
     try {
       const newRoute = await API.post("/api/routes/", routeData);
-      Notifications.success("Rota adicionada com sucesso! Buscando preços iniciais...");
+      Notifications.success(
+        "Rota adicionada com sucesso! Buscando preços iniciais..."
+      );
 
       // Fechar modal e recarregar dados
       bootstrap.Modal.getInstance(
@@ -242,21 +266,24 @@ class RoutesManager {
       form.reset();
       this.loadRoutes();
       this.loadStatistics();
-      
+
       // Aguardar um pouco e verificar se encontrou preços
       setTimeout(async () => {
         try {
           const prices = await API.get(`/api/routes/${newRoute.id}/prices`);
           if (prices.length > 0) {
-            Notifications.success(`${prices.length} preço(s) encontrado(s) para a rota!`);
+            Notifications.success(
+              `${prices.length} preço(s) encontrado(s) para a rota!`
+            );
           } else {
-            Notifications.info("Busca de preços em andamento. Atualize a página em alguns minutos.");
+            Notifications.info(
+              "Busca de preços em andamento. Atualize a página em alguns minutos."
+            );
           }
         } catch (error) {
           console.error("Erro ao verificar preços:", error);
         }
       }, 8000);
-      
     } catch (error) {
       console.error("Erro ao adicionar rota:", error);
       Notifications.error(
@@ -363,12 +390,14 @@ class RoutesManager {
   async searchPrices(routeId) {
     try {
       await API.post(`/api/routes/${routeId}/search-prices`);
-      Notifications.success("Busca de preços iniciada! Aguarde alguns minutos.");
-      
+      Notifications.success(
+        "Busca de preços iniciada! Aguarde alguns minutos."
+      );
+
       // Atualizar o indicador visual
       const routeCard = document.querySelector(`[data-route-id="${routeId}"]`);
       if (routeCard) {
-        const priceContainer = routeCard.querySelector('.price-info');
+        const priceContainer = routeCard.querySelector(".price-info");
         if (priceContainer) {
           priceContainer.innerHTML = `
             <small class="text-info">
@@ -377,7 +406,7 @@ class RoutesManager {
           `;
         }
       }
-      
+
       // Verificar resultado após alguns segundos
       setTimeout(async () => {
         try {
@@ -386,7 +415,7 @@ class RoutesManager {
             this.updateRoutePriceDisplay(routeId, prices);
             Notifications.success(`${prices.length} preço(s) encontrado(s)!`);
           } else {
-            const priceContainer = routeCard.querySelector('.price-info');
+            const priceContainer = routeCard.querySelector(".price-info");
             if (priceContainer) {
               priceContainer.innerHTML = `
                 <small class="text-warning">
@@ -399,7 +428,6 @@ class RoutesManager {
           console.error("Erro ao verificar preços:", error);
         }
       }, 10000);
-      
     } catch (error) {
       console.error("Erro ao buscar preços:", error);
       Notifications.error("Erro ao iniciar busca de preços.");

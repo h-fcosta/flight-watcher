@@ -24,58 +24,58 @@ def search_initial_prices(route_id: int, db: Session):
             logger.error(f"Rota {route_id} não encontrada para busca inicial")
             return
 
-        logger.info(f"Iniciando busca de preços para rota {route.origin} -> {route.dest}")
-        
+        logger.info(
+            f"Iniciando busca de preços para rota {route.origin} -> {route.dest}"
+        )
+
         # Buscar preços para alguns dias da rota (máximo 5 dias para não sobrecarregar)
         current_date = route.start
         end_date = min(route.end, route.start + timedelta(days=4))
         prices_found = 0
-        
+
         while current_date <= end_date and prices_found < 5:
             # Verificar se já existe preço para este dia
-            existing_price = db.query(PriceModel).filter(
-                PriceModel.route_id == route_id,
-                PriceModel.day == current_date
-            ).first()
-            
+            existing_price = (
+                db.query(PriceModel)
+                .filter(PriceModel.route_id == route_id, PriceModel.day == current_date)
+                .first()
+            )
+
             if not existing_price:
                 price = None
-                
+
                 # Tentar buscar preço real
                 if amadeus_service.is_client_ready():
                     price = amadeus_service.get_cheapest_price(
-                        day=current_date,
-                        origin=route.origin,
-                        dest=route.dest
+                        day=current_date, origin=route.origin, dest=route.dest
                     )
-                
+
                 # Se não encontrou preço real, simular um preço para demonstração
                 if not price:
                     # Gerar preço simulado baseado na rota e data
                     import random
-                    base_price = 800 if route.dest in ['JFK', 'LAX', 'LHR'] else 400
+
+                    base_price = 800 if route.dest in ["JFK", "LAX", "LHR"] else 400
                     variation = random.randint(-200, 300)
                     price = base_price + variation
                     logger.info(f"Preço simulado para {current_date}: R$ {price:.2f}")
-                
+
                 if price:
                     new_price = PriceModel(
-                        route_id=route_id,
-                        day=current_date,
-                        value=price
+                        route_id=route_id, day=current_date, value=price
                     )
                     db.add(new_price)
                     prices_found += 1
                     logger.info(f"Preço adicionado para {current_date}: R$ {price:.2f}")
-            
+
             current_date += timedelta(days=1)
-        
+
         if prices_found > 0:
             db.commit()
             logger.info(f"Busca inicial finalizada: {prices_found} preços encontrados")
         else:
             logger.warning("Nenhum preço encontrado na busca inicial")
-            
+
     except Exception as e:
         logger.error(f"Erro na busca inicial de preços para rota {route_id}: {e}")
         db.rollback()
@@ -114,7 +114,11 @@ def get_route(route_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=Route)
-def create_route(route_data: RouteCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def create_route(
+    route_data: RouteCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     """
     Cria uma nova rota e inicia busca de preços
     """
@@ -239,32 +243,39 @@ def get_route_prices(route_id: int, db: Session = Depends(get_db)):
     if not route:
         raise HTTPException(status_code=404, detail="Rota não encontrada")
 
-    prices = db.query(PriceModel).filter(
-        PriceModel.route_id == route_id
-    ).order_by(PriceModel.day.asc()).all()
+    prices = (
+        db.query(PriceModel)
+        .filter(PriceModel.route_id == route_id)
+        .order_by(PriceModel.day.asc())
+        .all()
+    )
 
     return [
         {
             "day": price.day.isoformat(),
             "value": price.value,
-            "created_at": price.created_at.isoformat() if price.created_at else None
+            "created_at": price.created_at.isoformat() if price.created_at else None,
         }
         for price in prices
     ]
 
 
 @router.post("/{route_id}/search-prices", response_model=SuccessResponse)
-def manual_price_search(route_id: int, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def manual_price_search(
+    route_id: int, background_tasks: BackgroundTasks, db: Session = Depends(get_db)
+):
     """
     Inicia uma busca manual de preços para uma rota
     """
     route = db.query(RouteModel).filter(RouteModel.id == route_id).first()
     if not route:
         raise HTTPException(status_code=404, detail="Rota não encontrada")
-    
+
     if not amadeus_service.is_client_ready():
-        raise HTTPException(status_code=503, detail="Serviço de busca de preços indisponível")
-    
+        raise HTTPException(
+            status_code=503, detail="Serviço de busca de preços indisponível"
+        )
+
     background_tasks.add_task(search_initial_prices, route_id, db)
     return SuccessResponse(message=f"Busca de preços iniciada para rota {route_id}")
 
