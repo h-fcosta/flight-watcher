@@ -89,34 +89,69 @@ class RoutesManager {
 
     if (this.filteredRoutes.length === 0) {
       container.innerHTML = `
-                <div class="text-center py-4">
+                <div class="text-center py-5">
                     <i class="fas fa-route fa-3x text-muted mb-3"></i>
-                    <h5>Nenhuma rota encontrada</h5>
-                    <p class="text-muted">Adicione uma nova rota para começar o monitoramento</p>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRouteModal">
-                        <i class="fas fa-plus"></i> Adicionar Primeira Rota
-                    </button>
+                    <h5 class="text-muted">Nenhuma rota encontrada</h5>
+                    <p class="text-muted">Adicione sua primeira rota para começar a monitorar preços</p>
                 </div>
             `;
       return;
     }
 
+    // Renderizar rotas
     const html = this.filteredRoutes
       .map((route) => this.renderRouteCard(route))
       .join("");
     container.innerHTML = html;
+    
+    // Carregar preços para cada rota
+    this.loadRoutePrices();
+  }
+
+  async loadRoutePrices() {
+    // Carregar preços para cada rota exibida
+    for (const route of this.filteredRoutes) {
+      try {
+        const prices = await API.get(`/api/routes/${route.id}/prices`);
+        if (prices.length > 0) {
+          // Atualizar o card da rota com o último preço
+          this.updateRoutePriceDisplay(route.id, prices);
+        }
+      } catch (error) {
+        console.error(`Erro ao carregar preços da rota ${route.id}:`, error);
+      }
+    }
+  }
+
+  updateRoutePriceDisplay(routeId, prices) {
+    const routeCard = document.querySelector(`[data-route-id="${routeId}"]`);
+    if (!routeCard || !prices.length) return;
+
+    // Encontrar o menor preço
+    const minPrice = Math.min(...prices.map(p => p.value));
+    const priceCount = prices.length;
+    
+    // Atualizar a exibição
+    const priceContainer = routeCard.querySelector('.price-info');
+    if (priceContainer) {
+      priceContainer.innerHTML = `
+        <small class="text-success">
+          <i class="fas fa-dollar-sign"></i> Menor preço: ${Format.currency(minPrice)}
+        </small><br>
+        <small class="text-muted">${priceCount} preço(s) encontrado(s)</small>
+      `;
+    }
   }
 
   renderRouteCard(route) {
-    const statusBadge = route.is_active
+    const statusBadge = route.active
       ? '<span class="badge bg-success">Ativo</span>'
       : '<span class="badge bg-secondary">Inativo</span>';
 
-    const returnInfo = route.return_date
-      ? `<br><small class="text-muted">Retorno: ${Format.date(
-          route.return_date
-        )}</small>`
-      : '<br><small class="text-muted">Só ida</small>';
+    const endInfo =
+      route.end && route.end !== route.start
+        ? `<br><small class="text-muted">Até: ${Format.date(route.end)}</small>`
+        : '<br><small class="text-muted">Período único</small>';
 
     const lastPriceInfo = route.last_price
       ? `<small class="text-muted">Último preço: ${Format.currency(
@@ -134,56 +169,41 @@ class RoutesManager {
                                     <i class="fas fa-plane text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">${route.origin} → ${
-      route.destination
-    }</h6>
-                                    <small class="text-muted">Partida: ${Format.date(
-                                      route.departure_date
-                                    )}</small>
-                                    ${returnInfo}
+                                    <h6 class="mb-1">${route.origin} → ${route.dest}</h6>
+                                    <small class="text-muted">Início: ${Format.date(route.start)}</small>
+                                    ${endInfo}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-                                <strong>Limite: ${Format.currency(
-                                  route.price_limit
-                                )}</strong><br>
-                                ${lastPriceInfo}
+                                <strong>Status: ${statusBadge}</strong><br>
+                                <div class="price-info">
+                                    <small class="text-muted">Buscando preços...</small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div>
-                                ${statusBadge}<br>
-                                <small class="text-muted">${
-                                  route.adults
-                                } adulto(s)</small>
+                            <div class="text-center">
+                                <small class="text-muted">Criado em</small><br>
+                                <small class="text-muted">${Format.date(new Date())}</small>
                             </div>
                         </div>
                         <div class="col-md-3 text-end">
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" onclick="routes.viewPriceHistory(${
-                                  route.id
-                                })" title="Ver histórico">
+                                <button class="btn btn-sm btn-outline-info" onclick="routes.searchPrices(${route.id})" title="Buscar preços">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="routes.viewPriceHistory(${route.id})" title="Ver histórico">
                                     <i class="fas fa-chart-line"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="routes.editRoute(${
-                                  route.id
-                                })" title="Editar">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="routes.editRoute(${route.id})" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="routes.toggleRoute(${
-                                  route.id
-                                })" title="${
-      route.is_active ? "Pausar" : "Ativar"
-    }">
-                                    <i class="fas fa-${
-                                      route.is_active ? "pause" : "play"
-                                    }"></i>
+                                <button class="btn btn-sm btn-outline-warning" onclick="routes.toggleRoute(${route.id})" title="${route.active ? "Pausar" : "Ativar"}">
+                                    <i class="fas fa-${route.active ? "pause" : "play"}"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="routes.deleteRoute(${
-                                  route.id
-                                })" title="Excluir">
+                                <button class="btn btn-sm btn-outline-danger" onclick="routes.deleteRoute(${route.id})" title="Excluir">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -200,12 +220,10 @@ class RoutesManager {
 
     const routeData = {
       origin: formData.get("origin").toUpperCase(),
-      destination: formData.get("destination").toUpperCase(),
-      departure_date: formData.get("departure_date"),
-      return_date: formData.get("return_date") || null,
-      price_limit: parseFloat(formData.get("price_limit")),
-      adults: parseInt(formData.get("adults")),
-      is_active: formData.get("is_active") === "on"
+      dest: formData.get("destination").toUpperCase(),
+      start: formData.get("departure_date"),
+      end: formData.get("return_date") || formData.get("departure_date"),
+      active: formData.get("is_active") === "on"
     };
 
     // Validação
@@ -214,8 +232,8 @@ class RoutesManager {
     }
 
     try {
-      await API.post("/api/routes", routeData);
-      Notifications.success("Rota adicionada com sucesso!");
+      const newRoute = await API.post("/api/routes/", routeData);
+      Notifications.success("Rota adicionada com sucesso! Buscando preços iniciais...");
 
       // Fechar modal e recarregar dados
       bootstrap.Modal.getInstance(
@@ -224,6 +242,21 @@ class RoutesManager {
       form.reset();
       this.loadRoutes();
       this.loadStatistics();
+      
+      // Aguardar um pouco e verificar se encontrou preços
+      setTimeout(async () => {
+        try {
+          const prices = await API.get(`/api/routes/${newRoute.id}/prices`);
+          if (prices.length > 0) {
+            Notifications.success(`${prices.length} preço(s) encontrado(s) para a rota!`);
+          } else {
+            Notifications.info("Busca de preços em andamento. Atualize a página em alguns minutos.");
+          }
+        } catch (error) {
+          console.error("Erro ao verificar preços:", error);
+        }
+      }, 8000);
+      
     } catch (error) {
       console.error("Erro ao adicionar rota:", error);
       Notifications.error(
@@ -240,12 +273,10 @@ class RoutesManager {
     const form = document.getElementById("edit-route-form");
     form.route_id.value = route.id;
     form.origin.value = route.origin;
-    form.destination.value = route.destination;
-    form.departure_date.value = route.departure_date;
-    form.return_date.value = route.return_date || "";
-    form.price_limit.value = route.price_limit;
-    form.adults.value = route.adults;
-    form.is_active.checked = route.is_active;
+    form.destination.value = route.dest;
+    form.departure_date.value = route.start;
+    form.return_date.value = route.end || "";
+    form.is_active.checked = route.active;
 
     // Mostrar modal
     new bootstrap.Modal(document.getElementById("editRouteModal")).show();
@@ -258,12 +289,10 @@ class RoutesManager {
 
     const routeData = {
       origin: formData.get("origin").toUpperCase(),
-      destination: formData.get("destination").toUpperCase(),
-      departure_date: formData.get("departure_date"),
-      return_date: formData.get("return_date") || null,
-      price_limit: parseFloat(formData.get("price_limit")),
-      adults: parseInt(formData.get("adults")),
-      is_active: formData.get("is_active") === "on"
+      dest: formData.get("destination").toUpperCase(),
+      start: formData.get("departure_date"),
+      end: formData.get("return_date") || formData.get("departure_date"),
+      active: formData.get("is_active") === "on"
     };
 
     // Validação
@@ -295,7 +324,7 @@ class RoutesManager {
 
     if (
       !confirm(
-        `Tem certeza que deseja excluir a rota ${route.origin} → ${route.destination}?`
+        `Tem certeza que deseja excluir a rota ${route.origin} → ${route.dest}?`
       )
     ) {
       return;
@@ -331,6 +360,52 @@ class RoutesManager {
     }
   }
 
+  async searchPrices(routeId) {
+    try {
+      await API.post(`/api/routes/${routeId}/search-prices`);
+      Notifications.success("Busca de preços iniciada! Aguarde alguns minutos.");
+      
+      // Atualizar o indicador visual
+      const routeCard = document.querySelector(`[data-route-id="${routeId}"]`);
+      if (routeCard) {
+        const priceContainer = routeCard.querySelector('.price-info');
+        if (priceContainer) {
+          priceContainer.innerHTML = `
+            <small class="text-info">
+              <i class="fas fa-spinner fa-spin"></i> Buscando preços...
+            </small>
+          `;
+        }
+      }
+      
+      // Verificar resultado após alguns segundos
+      setTimeout(async () => {
+        try {
+          const prices = await API.get(`/api/routes/${routeId}/prices`);
+          if (prices.length > 0) {
+            this.updateRoutePriceDisplay(routeId, prices);
+            Notifications.success(`${prices.length} preço(s) encontrado(s)!`);
+          } else {
+            const priceContainer = routeCard.querySelector('.price-info');
+            if (priceContainer) {
+              priceContainer.innerHTML = `
+                <small class="text-warning">
+                  <i class="fas fa-exclamation-triangle"></i> Nenhum preço encontrado
+                </small>
+              `;
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao verificar preços:", error);
+        }
+      }, 10000);
+      
+    } catch (error) {
+      console.error("Erro ao buscar preços:", error);
+      Notifications.error("Erro ao iniciar busca de preços.");
+    }
+  }
+
   async viewPriceHistory(routeId) {
     // TODO: Implementar modal com gráfico de histórico de preços
     Notifications.info("Histórico de preços em desenvolvimento");
@@ -349,13 +424,10 @@ class RoutesManager {
     this.filteredRoutes = this.routes.filter((route) => {
       if (filters.origin && !route.origin.includes(filters.origin))
         return false;
-      if (
-        filters.destination &&
-        !route.destination.includes(filters.destination)
-      )
+      if (filters.destination && !route.dest.includes(filters.destination))
         return false;
-      if (filters.status === "active" && !route.is_active) return false;
-      if (filters.status === "inactive" && route.is_active) return false;
+      if (filters.status === "active" && !route.active) return false;
+      if (filters.status === "inactive" && route.active) return false;
       return true;
     });
 
@@ -400,43 +472,28 @@ class RoutesManager {
       return false;
     }
 
-    if (!Validation.isValidIATA(data.destination)) {
+    if (!Validation.isValidIATA(data.dest)) {
       Notifications.error("Código de destino inválido (ex: JFK)");
       return false;
     }
 
-    if (data.origin === data.destination) {
+    if (data.origin === data.dest) {
       Notifications.error("Origem e destino não podem ser iguais");
       return false;
     }
 
-    if (!Validation.isValidDate(data.departure_date)) {
-      Notifications.error("Data de partida inválida");
+    if (!Validation.isValidDate(data.start)) {
+      Notifications.error("Data de início inválida");
       return false;
     }
 
-    if (new Date(data.departure_date) < new Date()) {
-      Notifications.error("Data de partida não pode ser no passado");
+    if (new Date(data.start) < new Date()) {
+      Notifications.error("Data de início não pode ser no passado");
       return false;
     }
 
-    if (
-      data.return_date &&
-      new Date(data.return_date) <= new Date(data.departure_date)
-    ) {
-      Notifications.error(
-        "Data de retorno deve ser posterior à data de partida"
-      );
-      return false;
-    }
-
-    if (!Validation.isValidPrice(data.price_limit)) {
-      Notifications.error("Limite de preço deve ser maior que zero");
-      return false;
-    }
-
-    if (data.adults < 1 || data.adults > 4) {
-      Notifications.error("Número de adultos deve ser entre 1 e 4");
+    if (data.end && new Date(data.end) < new Date(data.start)) {
+      Notifications.error("Data de fim deve ser posterior à data de início");
       return false;
     }
 
