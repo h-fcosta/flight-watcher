@@ -8,18 +8,27 @@ load_dotenv()
 
 amadeus_key = os.getenv("AMADEUS_KEY")
 amadeus_secret = os.getenv("AMADEUS_SECRET")
+amadeus_env = os.getenv("AMADEUS_ENV", "test")  # test ou production
 
 if not amadeus_key or not amadeus_secret:
     logging.error("AMADEUS_KEY ou AMADEUS_SECRET não configurados")
     _amadeus = None
 else:
     try:
-        _amadeus = Client(
-            client_id=amadeus_key,
-            client_secret=amadeus_secret,
-            hostname="test",  # Usar ambiente de teste
-        )
-        logging.info("Cliente Amadeus inicializado com sucesso (ambiente de teste)")
+        if amadeus_env.lower() == "production":
+            _amadeus = Client(
+                client_id=amadeus_key,
+                client_secret=amadeus_secret,
+                # hostname padrão = production
+            )
+            logging.info(
+                "Cliente Amadeus inicializado com sucesso (ambiente de produção)"
+            )
+        else:
+            _amadeus = Client(
+                client_id=amadeus_key, client_secret=amadeus_secret, hostname="test"
+            )
+            logging.info("Cliente Amadeus inicializado com sucesso (ambiente de teste)")
     except Exception as e:
         logging.error("Erro ao inicializar cliente Amadeus: %s", e)
         _amadeus = None

@@ -1,0 +1,289 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <p class="text-muted">Visão geral do sistema de monitoramento de preços</p>
+  </div>
+</div>
+
+<!-- Cards de Estatísticas -->
+<div class="row mb-4">
+  <div class="col-md-3 mb-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Rotas Ativas</h5>
+            <h2 id="active-routes">-</h2>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-route fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Preços Coletados</h5>
+            <h2 id="total-prices">-</h2>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Promoções (30d)</h5>
+            <h2 id="total-deals">-</h2>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-tags fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Última Execução</h5>
+            <p id="last-job" class="mb-0">-</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-clock fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Status dos Serviços -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-cogs"></i> Status dos Serviços</h5>
+      </div>
+      <div class="card-body">
+        <div class="row" id="services-status">
+          <div class="col-md-4 text-center">
+            <i class="fas fa-spinner fa-spin fa-2x text-secondary"></i>
+            <p>Carregando...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Resumo de Preços por Rota -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h5><i class="fas fa-list"></i> Resumo de Rotas (Últimos 7 dias)</h5>
+        <a href="/routes" class="btn btn-primary btn-sm">
+          <i class="fas fa-plus"></i> Gerenciar Rotas
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover" id="routes-table">
+            <thead>
+              <tr>
+                <th>Rota</th>
+                <th>Status</th>
+                <th>Preços Coletados</th>
+                <th>Menor Preço</th>
+                <th>Maior Preço</th>
+                <th>Preço Médio</th>
+                <th>Última Atualização</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center">
+                  <i class="fas fa-spinner fa-spin"></i> Carregando dados...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Carregar dados do dashboard
+  document.addEventListener("DOMContentLoaded", function () {
+    loadDashboardData();
+
+    // Atualizar a cada 30 segundos
+    setInterval(loadDashboardData, 30000);
+  });
+
+  async function loadDashboardData() {
+    try {
+      // Carregar estatísticas do sistema
+      const statsResponse = await fetch("/api/status/stats");
+      const stats = await statsResponse.json();
+
+      document.getElementById("active-routes").textContent =
+        stats.active_routes;
+      document.getElementById("total-prices").textContent =
+        stats.total_prices.toLocaleString();
+      document.getElementById("total-deals").textContent = stats.total_deals;
+
+      const lastJob = stats.last_job_run;
+      if (lastJob) {
+        const date = new Date(lastJob);
+        document.getElementById("last-job").textContent =
+          date.toLocaleString("pt-BR");
+      } else {
+        document.getElementById("last-job").textContent = "Nunca executado";
+      }
+
+      // Carregar status dos serviços
+      const servicesResponse = await fetch("/api/status/services");
+      const services = await servicesResponse.json();
+
+      const servicesContainer = document.getElementById("services-status");
+      servicesContainer.innerHTML = `
+            <div class="col-md-4 text-center">
+                <i class="fas fa-plane fa-2x ${
+                  services.amadeus.status === "OK"
+                    ? "text-success"
+                    : "text-danger"
+                }"></i>
+                <h6>API Amadeus</h6>
+                <span class="badge ${
+                  services.amadeus.status === "OK" ? "bg-success" : "bg-danger"
+                }">${services.amadeus.status}</span>
+                <small class="d-block text-muted">${
+                  services.amadeus.environment
+                }</small>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-paper-plane fa-2x ${
+                  services.telegram.status === "OK"
+                    ? "text-success"
+                    : services.telegram.status === "DISABLED"
+                    ? "text-warning"
+                    : "text-danger"
+                }"></i>
+                <h6>Telegram</h6>
+                <span class="badge ${
+                  services.telegram.status === "OK"
+                    ? "bg-success"
+                    : services.telegram.status === "DISABLED"
+                    ? "bg-warning"
+                    : "bg-danger"
+                }">${services.telegram.status}</span>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-database fa-2x ${
+                  services.database.status === "OK"
+                    ? "text-success"
+                    : "text-danger"
+                }"></i>
+                <h6>Banco de Dados</h6>
+                <span class="badge ${
+                  services.database.status === "OK" ? "bg-success" : "bg-danger"
+                }">${services.database.status}</span>
+                <small class="d-block text-muted">${
+                  services.database.type
+                }</small>
+            </div>
+        `;
+
+      // Carregar resumo de preços
+      const pricesResponse = await fetch("/api/prices/summary?days=7");
+      const pricesSummary = await pricesResponse.json();
+
+      const tableBody = document.querySelector("#routes-table tbody");
+      if (pricesSummary.length === 0) {
+        tableBody.innerHTML =
+          '<tr><td colspan="8" class="text-center">Nenhuma rota encontrada</td></tr>';
+      } else {
+        tableBody.innerHTML = pricesSummary
+          .map(
+            (route) => `
+                <tr>
+                    <td><strong>${route.route}</strong></td>
+                    <td>
+                        <span class="badge ${
+                          route.active ? "bg-success" : "bg-secondary"
+                        }">
+                            ${route.active ? "Ativa" : "Inativa"}
+                        </span>
+                    </td>
+                    <td>${route.total_prices}</td>
+                    <td>${
+                      route.min_price
+                        ? "R$ " +
+                          route.min_price.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2
+                          })
+                        : "-"
+                    }</td>
+                    <td>${
+                      route.max_price
+                        ? "R$ " +
+                          route.max_price.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2
+                          })
+                        : "-"
+                    }</td>
+                    <td>${
+                      route.avg_price
+                        ? "R$ " +
+                          route.avg_price.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2
+                          })
+                        : "-"
+                    }</td>
+                    <td>${
+                      route.last_update
+                        ? new Date(route.last_update).toLocaleDateString(
+                            "pt-BR"
+                          )
+                        : "-"
+                    }</td>
+                    <td>
+                        <a href="/charts/${
+                          route.route_id
+                        }" class="btn btn-sm btn-outline-primary" title="Ver Gráfico">
+                            <i class="fas fa-chart-line"></i>
+                        </a>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados do dashboard:", error);
+    }
+  }
+</script>
+{% endblock %}

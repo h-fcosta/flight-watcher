@@ -1,7 +1,36 @@
+# Ambiente virtual
 .venv/
+venv/
+
+# Configurações sensíveis
 .env
 
+# Cache Python
 __pycache__/
-.logs/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
+# Database
 prices.db
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
