@@ -5,6 +5,35 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-08-22
+
+### 🚀 Sistema de Ofertas Detalhadas
+
+Esta versão introduz o sistema completo de visualização de ofertas de voo com informações detalhadas.
+
+#### ✨ Adicionado
+
+- **Sistema de ofertas detalhadas**: Modelo FlightOffer com 20+ campos de informações
+- **Dashboard interativo**: Rotas clicáveis com navegação direta para ofertas
+- **Página de ofertas filtráveis**: Visualização por rota com filtros avançados  
+- **Página de detalhes da oferta**: Informações completas de voo, preço e disponibilidade
+- **JavaScript classes**: OffersManager e componentes reutilizáveis
+- **API endpoints**: `/api/offers/` com filtros e paginação
+- **Documentação abrangente**: FUNCIONALIDADES.md, STATUS.md, CHECKLIST.md
+
+#### 🔧 Melhorado
+
+- **Validação HTML5**: Corrigidas tags XHTML para padrão HTML5
+- **Organização de código**: Arquivos de desenvolvimento movidos para dev-tools/
+- **Estrutura de schemas**: Melhor handling de objetos Pydantic
+- **Interface responsiva**: Layout otimizado para mobile e desktop
+
+#### 🏗️ Organização
+
+- **Limpeza de arquivos**: Removidos caches Python e arquivos temporários
+- **Versionamento**: Branch feature/v1.1.0-flight-offers criado
+- **Documentação**: Roadmap completo até v1.5.0
+
 ## [1.0.0] - 2025-08-21
 
 ### 🎉 Primeira Versão Estável
