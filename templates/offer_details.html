@@ -1,0 +1,343 @@
+{% extends "base.html" %} {% block title %}{{ title }}{% endblock %} {% block
+content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/offers">Ofertas</a></li>
+          <li class="breadcrumb-item active">Detalhes da Oferta</li>
+        </ol>
+      </nav>
+
+      <!-- Cabeçalho -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+          <i class="bi bi-airplane me-2"></i>
+          Detalhes da Oferta
+        </h1>
+        <div>
+          <button
+            class="btn btn-outline-secondary me-2"
+            onclick="history.back()"
+          >
+            <i class="bi bi-arrow-left me-1"></i>
+            Voltar
+          </button>
+          <button class="btn btn-primary" id="refreshButton">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            Atualizar
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="text-center" id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p class="mt-2">Carregando detalhes da oferta...</p>
+      </div>
+
+      <!-- Conteúdo Principal -->
+      <div id="offerContent" style="display: none">
+        <!-- Informações Principais -->
+        <div class="row mb-4">
+          <div class="col-lg-8">
+            <div class="card border-primary">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Informações do Voo
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6 class="text-muted">Companhia Aérea</h6>
+                    <p class="fs-5 mb-3">
+                      <span id="airlineCode" class="badge bg-secondary"></span>
+                      <span id="airlineName" class="ms-2"></span>
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="text-muted">Número do Voo</h6>
+                    <p class="fs-5 mb-3" id="flightNumber">-</p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6 class="text-muted">Aeronave</h6>
+                    <p class="mb-3" id="aircraftType">-</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="text-muted">Classe da Cabine</h6>
+                    <p class="mb-3">
+                      <span id="cabinClass" class="badge bg-info"></span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <h6 class="text-muted">Partida</h6>
+                    <p class="mb-1 fw-bold" id="departureTime">-</p>
+                    <small class="text-muted" id="departureTerminal">-</small>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <h6 class="text-muted">Duração</h6>
+                    <p class="mb-1 fw-bold" id="duration">-</p>
+                    <small class="text-muted" id="stopsInfo">-</small>
+                  </div>
+                  <div class="col-md-4 text-end">
+                    <h6 class="text-muted">Chegada</h6>
+                    <p class="mb-1 fw-bold" id="arrivalTime">-</p>
+                    <small class="text-muted" id="arrivalTerminal">-</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <!-- Preço -->
+            <div class="card border-success mb-3">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                  <i class="bi bi-currency-dollar me-2"></i>
+                  Preço
+                </h5>
+              </div>
+              <div class="card-body text-center">
+                <h2 class="text-success mb-2" id="totalPrice">-</h2>
+                <div class="row text-sm">
+                  <div class="col-6">
+                    <small class="text-muted">Base:</small><br />
+                    <span id="basePrice">-</span>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Taxas:</small><br />
+                    <span id="taxesFees">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Disponibilidade -->
+            <div class="card border-info">
+              <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                  <i class="bi bi-person-check me-2"></i>
+                  Disponibilidade
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="text-center">
+                  <h4 id="seatsAvailable" class="text-info">-</h4>
+                  <small class="text-muted">assentos disponíveis</small>
+                </div>
+                <hr />
+                <small class="text-muted">Último ticket:</small>
+                <p class="mb-0" id="lastTicketingDate">-</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rota e Conexões -->
+        <div class="row mb-4">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">
+                  <i class="bi bi-geo-alt me-2"></i>
+                  Rota
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-5">
+                    <h4 id="originCode" class="text-primary">-</h4>
+                    <small class="text-muted" id="originName">Origem</small>
+                  </div>
+                  <div class="col-2">
+                    <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                  </div>
+                  <div class="col-5">
+                    <h4 id="destCode" class="text-primary">-</h4>
+                    <small class="text-muted" id="destName">Destino</small>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">Período:</small>
+                    <p class="mb-0" id="routePeriod">-</p>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Status:</small>
+                    <p class="mb-0" id="routeStatus">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">
+                  <i class="bi bi-shuffle me-2"></i>
+                  Conexões
+                </h6>
+              </div>
+              <div class="card-body">
+                <div id="connectionsInfo">
+                  <!-- Informações de conexões serão carregadas via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagagem e Serviços -->
+        <div class="row mb-4">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">
+                  <i class="bi bi-bag me-2"></i>
+                  Bagagem
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">Peças incluídas:</small>
+                    <p class="mb-2" id="baggagePieces">-</p>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Custo extra:</small>
+                    <p class="mb-2" id="baggageExtraCost">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">
+                  <i class="bi bi-gear me-2"></i>
+                  Informações Técnicas
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted">Fonte:</small>
+                    <p class="mb-2" id="source">-</p>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">Encontrado em:</small>
+                    <p class="mb-2" id="foundAt">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card border-warning">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-3">Ações Disponíveis</h6>
+                <button class="btn btn-warning me-2" id="shareButton">
+                  <i class="bi bi-share me-1"></i>
+                  Compartilhar
+                </button>
+                <button
+                  class="btn btn-outline-info me-2"
+                  id="viewSimilarButton"
+                >
+                  <i class="bi bi-search me-1"></i>
+                  Ver Ofertas Similares
+                </button>
+                <button class="btn btn-outline-success" id="bookingInfoButton">
+                  <i class="bi bi-info-circle me-1"></i>
+                  Como Reservar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Erro -->
+      <div id="errorContent" style="display: none">
+        <div class="alert alert-danger" role="alert">
+          <h4 class="alert-heading">Erro!</h4>
+          <p id="errorMessage">
+            Não foi possível carregar os detalhes da oferta.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Informações de Reserva -->
+<div class="modal fade" id="bookingInfoModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Como Fazer a Reserva</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Importante:</strong> Este sistema apenas monitora preços. Para
+          fazer a reserva, você precisa acessar diretamente o site da companhia
+          aérea ou uma agência de viagens.
+        </div>
+
+        <h6>Passos para reservar:</h6>
+        <ol>
+          <li>Acesse o site oficial da companhia aérea</li>
+          <li>Busque pelo voo usando os dados mostrados aqui</li>
+          <li>Verifique se o preço e disponibilidade ainda são válidos</li>
+          <li>Complete o processo de reserva no site da companhia</li>
+        </ol>
+
+        <div class="alert alert-warning mt-3">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <strong>Atenção:</strong> Preços e disponibilidade podem mudar
+          rapidamente. Recomendamos fazer a reserva o quanto antes.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Passar o ID da oferta para o JavaScript
+  window.offerId = "{{ offer_id }}";
+</script>
+<script src="{{ url_for('static', path='js/offer_details.js') }}"></script>
+{% endblock %}

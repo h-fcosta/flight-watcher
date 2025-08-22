@@ -2,7 +2,7 @@
 
 Sistema inteligente de monitoramento de preços de passagens aéreas com alertas automáticos e interface web completa.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8+-green.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-red.svg)
 ![License](https://img.shields.io/badge/license-MIT-yellow.svg)
@@ -17,6 +17,8 @@ Sistema inteligente de monitoramento de preços de passagens aéreas com alertas
 - 💰 **Detecção de Promoções**: Alertas quando preços ficam abaixo do limite
 - 🚀 **Busca Automática**: Preços são buscados automaticamente ao criar rotas
 - 📤 **API RESTful**: Documentação completa com Swagger/OpenAPI
+- ✈️ **Ofertas Detalhadas (v1.1.0)**: Visualização completa de ofertas de voo com detalhes de companhias, conexões, bagagens e mais
+- 🎯 **Navegação Integrada**: Clique em rotas no dashboard para ver ofertas específicas
 
 ## 🎯 Sobre o Projeto
 
@@ -28,10 +30,35 @@ O Flight Watcher é um sistema completo para monitoramento automático de preço
 - 🎯 **Alertas Inteligentes**: Notificações via Telegram quando preços caem
 - 📊 **Dashboard Completo**: Interface web responsiva para gerenciamento
 - 🔄 **Busca Automática**: Preços são buscados automaticamente ao criar rotas
+- 📋 **Ofertas Detalhadas**: Sistema completo de visualização de ofertas com filtros avançados
+- 🔗 **Navegação Fluida**: Integração entre dashboard e páginas de ofertas
 - 📈 **Histórico Detalhado**: Armazenamento e visualização de tendências de preços
 - 🛠️ **API RESTful**: Documentação completa com Swagger/OpenAPI
 
-## 🚀 Instalação Rápida
+### � Ofertas Detalhadas (v1.1.0)
+
+O sistema agora inclui uma funcionalidade completa de visualização de ofertas de voo:
+
+- **📄 Página de Ofertas**: Lista todas as ofertas disponíveis com informações detalhadas
+- **🔍 Filtros Avançados**: Filtre por rota, companhia, número de conexões, preço e classe
+- **📊 Estatísticas**: Veja resumos por companhia aérea com contadores de ofertas
+- **🎯 Navegação Integrada**: Clique em qualquer rota no dashboard para ver ofertas específicas
+- **📋 Detalhes Completos**: Visualize informações completas de cada oferta incluindo:
+  - Detalhes da companhia aérea e aeronave
+  - Informações de horários e duração
+  - Conexões e terminais
+  - Políticas de bagagem
+  - Disponibilidade de assentos
+  - Classe de cabine e amenidades
+
+### 🔗 Fluxo de Navegação
+
+1. **Dashboard** → Visualize todas as rotas monitoradas
+2. **Clique na Rota** → Seja direcionado para ofertas filtradas por essa rota
+3. **Filtros** → Refine ainda mais sua busca
+4. **Detalhes** → Clique em qualquer oferta para ver informações completas
+
+## 🚀 Instalação e Uso
 
 ### 1. Clonar e configurar
 

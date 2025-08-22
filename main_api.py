@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 
 from config import settings
 from api.database import create_tables
-from api.routers import routes, prices, deals, status
+from api.routers import routes, prices, deals, status, offers
 from api.services.scheduler import start_scheduler, stop_scheduler
 
 # Configurar logging
@@ -100,6 +100,7 @@ app.include_router(routes.router, prefix="/api/routes", tags=["Routes"])
 app.include_router(prices.router, prefix="/api/prices", tags=["Prices"])
 app.include_router(deals.router, prefix="/api/deals", tags=["Deals"])
 app.include_router(status.router, prefix="/api/status", tags=["Status"])
+app.include_router(offers.router, prefix="/api", tags=["Flight Offers"])
 
 
 # Rotas da interface web
@@ -124,6 +125,27 @@ async def deals_page(request: Request):
     """Página de promoções"""
     return templates.TemplateResponse(
         "deals.html", {"request": request, "title": "Promoções Encontradas"}
+    )
+
+
+@app.get("/offers", response_class=HTMLResponse)
+async def offers_page(request: Request):
+    """Página de ofertas de voo"""
+    return templates.TemplateResponse(
+        "offers.html", {"request": request, "title": "Ofertas de Voo"}
+    )
+
+
+@app.get("/offers/{offer_id}", response_class=HTMLResponse)
+async def offer_details_page(request: Request, offer_id: int):
+    """Página de detalhes de uma oferta específica"""
+    return templates.TemplateResponse(
+        "offer_details.html",
+        {
+            "request": request,
+            "title": f"Detalhes da Oferta #{offer_id}",
+            "offer_id": offer_id,
+        },
     )
 
 
