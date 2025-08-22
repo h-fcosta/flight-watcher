@@ -255,9 +255,19 @@ content %}
         <!-- Ações -->
         <div class="row">
           <div class="col-12">
-            <div class="card border-warning">
+            <div class="card border-success">
               <div class="card-body text-center">
                 <h6 class="text-muted mb-3">Ações Disponíveis</h6>
+                <!-- Botão principal de compra -->
+                <button
+                  class="btn btn-success btn-lg me-2 mb-2"
+                  id="purchaseButton"
+                >
+                  <i class="bi bi-cart-check me-1"></i>
+                  Comprar Passagem
+                </button>
+                <br />
+                <!-- Botões secundários -->
                 <button class="btn btn-warning me-2" id="shareButton">
                   <i class="bi bi-share me-1"></i>
                   Compartilhar
@@ -269,7 +279,10 @@ content %}
                   <i class="bi bi-search me-1"></i>
                   Ver Ofertas Similares
                 </button>
-                <button class="btn btn-outline-success" id="bookingInfoButton">
+                <button
+                  class="btn btn-outline-secondary"
+                  id="bookingInfoButton"
+                >
                   <i class="bi bi-info-circle me-1"></i>
                   Como Reservar
                 </button>
@@ -339,5 +352,6 @@ content %}
   // Passar o ID da oferta para o JavaScript
   window.offerId = "{{ offer_id }}";
 </script>
+<script src="{{ url_for('static', path='js/airline-booking.js') }}"></script>
 <script src="{{ url_for('static', path='js/offer_details.js') }}"></script>
 {% endblock %}

@@ -15,7 +15,7 @@ Esta versão introduz o sistema completo de visualização de ofertas de voo com
 
 - **Sistema de ofertas detalhadas**: Modelo FlightOffer com 20+ campos de informações
 - **Dashboard interativo**: Rotas clicáveis com navegação direta para ofertas
-- **Página de ofertas filtráveis**: Visualização por rota com filtros avançados  
+- **Página de ofertas filtráveis**: Visualização por rota com filtros avançados
 - **Página de detalhes da oferta**: Informações completas de voo, preço e disponibilidade
 - **JavaScript classes**: OffersManager e componentes reutilizáveis
 - **API endpoints**: `/api/offers/` com filtros e paginação

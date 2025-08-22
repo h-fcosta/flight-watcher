@@ -18,6 +18,11 @@ class OfferDetailsManager {
       this.loadOfferDetails();
     });
 
+    // Botão principal de compra
+    document.getElementById("purchaseButton").addEventListener("click", () => {
+      this.purchaseOffer();
+    });
+
     // Botão compartilhar
     document.getElementById("shareButton").addEventListener("click", () => {
       this.shareOffer();
@@ -266,6 +271,40 @@ class OfferDetailsManager {
     params.set("max_price", Math.ceil(this.offer.price * 1.2)); // 20% a mais que o preço atual
 
     window.location.href = `/offers?${params.toString()}`;
+  }
+
+  purchaseOffer() {
+    if (!this.offer) {
+      this.showToast("Erro: Dados da oferta não carregados");
+      return;
+    }
+
+    try {
+      // Usar o serviço de booking de companhias aéreas
+      airlineBookingService.redirectToBooking(this.offer);
+
+      // Log analytics (opcional)
+      this.trackPurchaseClick();
+    } catch (error) {
+      console.error("Erro ao redirecionar para compra:", error);
+      this.showToast("Erro ao abrir página de compra. Tente novamente.");
+    }
+  }
+
+  trackPurchaseClick() {
+    // Registrar clique para analytics (opcional)
+    if (this.offer) {
+      console.log("Purchase click tracked:", {
+        offerId: this.offer.id,
+        route: `${this.offer.route?.origin} → ${this.offer.route?.dest}`,
+        price: this.offer.price,
+        airline: this.offer.airline_code,
+        timestamp: new Date().toISOString()
+      });
+
+      // Aqui você pode enviar para serviços de analytics como Google Analytics
+      // gtag('event', 'purchase_click', { ... });
+    }
   }
 
   showError(message) {

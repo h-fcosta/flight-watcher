@@ -308,12 +308,22 @@ class OffersManager {
                         </div>
                         
                         <div class="col-md-1 text-end">
-                            <button class="btn btn-outline-primary btn-sm" 
-                                    onclick="window.location.href='/offers/${
-                                      offer.id
-                                    }'">
-                                <i class="bi bi-eye"></i>
-                            </button>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-success btn-sm mb-1" 
+                                        onclick="offersManager.purchaseOffer(${
+                                          offer.id
+                                        })"
+                                        title="Comprar Passagem">
+                                    <i class="bi bi-cart-check"></i>
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" 
+                                        onclick="window.location.href='/offers/${
+                                          offer.id
+                                        }'"
+                                        title="Ver Detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -415,6 +425,35 @@ class OffersManager {
                 </button>
             </div>
         `;
+  }
+
+  purchaseOffer(offerId) {
+    try {
+      // Encontrar a oferta pelos dados carregados
+      const offer = this.offers.find((o) => o.id === offerId);
+
+      if (!offer) {
+        this.showToast("Erro: Oferta não encontrada");
+        return;
+      }
+
+      // Usar o serviço de booking de companhias aéreas
+      airlineBookingService.redirectToBooking(offer);
+
+      // Log analytics
+      console.log("Purchase click from offers list:", {
+        offerId: offer.id,
+        route: `${offer.route?.origin || offer.origin} → ${
+          offer.route?.dest || offer.destination
+        }`,
+        price: offer.price,
+        airline: offer.airline_code,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Erro ao redirecionar para compra:", error);
+      this.showToast("Erro ao abrir página de compra. Tente novamente.");
+    }
   }
 
   showToast(message) {

@@ -230,6 +230,9 @@ content %}
     </div>
   </div>
 </div>
-{% endblock %} {% block scripts %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/airline-booking.js') }}"></script>
 <script src="{{ url_for('static', path='js/offers.js') }}"></script>
 {% endblock %}
