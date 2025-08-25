@@ -27,6 +27,7 @@ flight-watcher/
 ## 🛠️ Stack Tecnológica
 
 ### Backend (Mantido da v1.1)
+
 - **FastAPI** - API REST moderna e rápida
 - **SQLAlchemy** - ORM para banco de dados
 - **SQLite** - Banco de dados local
@@ -34,6 +35,7 @@ flight-watcher/
 - **APScheduler** - Agendamento de tarefas
 
 ### Frontend (Novo na v2.0)
+
 - **React 18** - Biblioteca de interface
 - **TypeScript** - Tipagem estática
 - **Vite** - Build tool e dev server
@@ -44,13 +46,15 @@ flight-watcher/
 ## 🚀 Início Rápido
 
 ### Pré-requisitos
-- Node.js 18+ 
+
+- Node.js 18+
 - Python 3.11+
 - Docker (opcional)
 
 ### Desenvolvimento Local
 
 #### 1. Backend (FastAPI)
+
 ```bash
 cd backend
 python -m venv venv
@@ -60,6 +64,7 @@ uvicorn main_api:app --reload --port 8000
 ```
 
 #### 2. Frontend (React)
+
 ```bash
 cd frontend
 npm install
@@ -67,6 +72,7 @@ npm run dev
 ```
 
 Acesse:
+
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8000
 - **Documentação API**: http://localhost:8000/docs
@@ -80,18 +86,19 @@ docker-compose up --build
 # Apenas backend
 docker-compose up backend
 
-# Apenas frontend  
+# Apenas frontend
 docker-compose up frontend
 ```
 
 ## 🎨 Design System
 
 ### shadcn/ui Components
+
 O projeto utiliza shadcn/ui para componentes consistentes:
 
 ```tsx
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function Example() {
   return (
@@ -103,32 +110,35 @@ function Example() {
         <Button>Ver Ofertas</Button>
       </CardContent>
     </Card>
-  )
+  );
 }
 ```
 
 ### Customização de Cores
+
 Edite `frontend/tailwind.config.js` para personalizar o tema.
 
 ## 📡 API Integration
 
 ### Cliente API
+
 O frontend se comunica com o backend via fetch:
 
 ```typescript
 // services/api.ts
-const API_BASE = 'http://localhost:8000'
+const API_BASE = "http://localhost:8000";
 
 export const api = {
-  getOffers: () => fetch(`${API_BASE}/api/offers/`).then(r => r.json()),
-  getRoutes: () => fetch(`${API_BASE}/api/routes/`).then(r => r.json()),
+  getOffers: () => fetch(`${API_BASE}/api/offers/`).then((r) => r.json()),
+  getRoutes: () => fetch(`${API_BASE}/api/routes/`).then((r) => r.json())
   // ... outros endpoints
-}
+};
 ```
 
 ### Endpoints Disponíveis
+
 - `GET /api/offers/` - Lista ofertas de voo
-- `GET /api/routes/` - Lista rotas monitoradas  
+- `GET /api/routes/` - Lista rotas monitoradas
 - `GET /api/prices/` - Histórico de preços
 - `GET /api/deals/` - Melhores ofertas
 - `GET /api/status/` - Status do sistema
@@ -161,6 +171,7 @@ frontend/src/components/
 ```
 
 ### Convenções
+
 - **Componentes**: PascalCase (`FlightCard.tsx`)
 - **Arquivos**: kebab-case (`flight-card.tsx`)
 - **Hooks**: usePrefix (`useFlightData.ts`)
@@ -189,12 +200,14 @@ npm run build
 ## 🔄 Migração da v1.1
 
 ### O que mudou:
+
 - ✅ **Frontend**: Templates Jinja2 → React SPA
 - ✅ **Build**: Python serving → Node.js + Vite
 - ✅ **Styling**: Bootstrap → Tailwind + shadcn/ui
 - ✅ **Arquitetura**: Monolito → Frontend/Backend separados
 
 ### O que NÃO mudou:
+
 - ✅ **API endpoints**: Mesmos endpoints da v1.1
 - ✅ **Database**: Schema mantido
 - ✅ **Business logic**: Preserved no backend
@@ -203,6 +216,7 @@ npm run build
 ## 📚 Scripts Úteis
 
 ### Frontend
+
 ```bash
 npm run dev          # Desenvolvimento
 npm run build        # Build produção
@@ -211,6 +225,7 @@ npm run lint         # ESLint
 ```
 
 ### Backend
+
 ```bash
 uvicorn main_api:app --reload    # Desenvolvimento
 python -m pytest                # Testes
@@ -220,6 +235,7 @@ python dev-tools/test_amadeus.py # Testar API
 ## 🐛 Troubleshooting
 
 ### CORS Issues
+
 Se houver problemas de CORS, verifique `backend/main_api.py`:
 
 ```python
@@ -230,11 +246,14 @@ allow_origins=[
 ```
 
 ### Path Mapping
+
 Para imports `@/components`, verifique:
+
 - `frontend/tsconfig.app.json`
 - `frontend/vite.config.ts`
 
 ### Node/NPM Issues
+
 ```bash
 # Limpar cache npm
 npm cache clean --force

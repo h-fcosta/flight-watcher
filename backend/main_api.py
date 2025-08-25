@@ -1,7 +1,4 @@
-from fastapi import FastAPI, Request, Depends
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import logging
@@ -88,18 +85,12 @@ app.add_middleware(
         "http://localhost:5173",  # Vite dev server
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
-        "*"  # Em produção, especificar apenas domínios necessários
+        "*",  # Em produção, especificar apenas domínios necessários
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Arquivos estáticos
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Templates
-templates = Jinja2Templates(directory="templates")
 
 # Incluir routers da API
 app.include_router(routes.router, prefix="/api/routes", tags=["Routes"])
@@ -109,82 +100,21 @@ app.include_router(status.router, prefix="/api/status", tags=["Status"])
 app.include_router(offers.router, prefix="/api", tags=["Flight Offers"])
 
 
-# Rotas da interface web
-@app.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request):
-    """Dashboard principal"""
-    return templates.TemplateResponse(
-        "dashboard.html", {"request": request, "title": "Flight Watcher - Dashboard"}
-    )
-
-
-@app.get("/routes", response_class=HTMLResponse)
-async def routes_page(request: Request):
-    """Página de gerenciamento de rotas"""
-    return templates.TemplateResponse(
-        "routes.html", {"request": request, "title": "Gerenciar Rotas"}
-    )
-
-
-@app.get("/deals", response_class=HTMLResponse)
-async def deals_page(request: Request):
-    """Página de promoções"""
-    return templates.TemplateResponse(
-        "deals.html", {"request": request, "title": "Promoções Encontradas"}
-    )
-
-
-@app.get("/offers", response_class=HTMLResponse)
-async def offers_page(request: Request):
-    """Página de ofertas de voo"""
-    return templates.TemplateResponse(
-        "offers.html", {"request": request, "title": "Ofertas de Voo"}
-    )
-
-
-@app.get("/offers/{offer_id}", response_class=HTMLResponse)
-async def offer_details_page(request: Request, offer_id: int):
-    """Página de detalhes de uma oferta específica"""
-    return templates.TemplateResponse(
-        "offer_details.html",
-        {
-            "request": request,
-            "title": f"Detalhes da Oferta #{offer_id}",
-            "offer_id": offer_id,
-        },
-    )
-
-
-@app.get("/charts/{route_id}", response_class=HTMLResponse)
-async def chart_page(request: Request, route_id: int):
-    """Página de gráfico para uma rota específica"""
-    return templates.TemplateResponse(
-        "chart.html",
-        {
-            "request": request,
-            "title": f"Gráfico - Rota #{route_id}",
-            "route_id": route_id,
-        },
-    )
-
-
-# Endpoint de informações
-@app.get("/info")
-async def app_info():
-    """Informações sobre a aplicação"""
+# Endpoint raiz apenas para verificação da API
+@app.get("/")
+async def root():
+    """Endpoint raiz da API"""
     return {
-        "name": settings.app_name,
-        "version": settings.app_version,
-        "environment": settings.amadeus_env,
-        "debug": settings.debug,
+        "message": "Flight Watcher API v2.0",
+        "status": "running",
+        "docs": "/docs",
+        "frontend": "React app served separately on port 5173",
     }
 
 
 if __name__ == "__main__":
+    import uvicorn
+
     uvicorn.run(
-        "main_api:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=settings.debug,
-        log_level="info",
+        "main_api:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
     )

@@ -1,7 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plane } from "lucide-react"
-import "./globals.css"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Plane } from "lucide-react";
+import "./globals.css";
 
 function App() {
   return (
@@ -10,9 +16,13 @@ function App() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Plane className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-foreground">Flight Watcher v2.0</h1>
+            <h1 className="text-4xl font-bold text-foreground">
+              Flight Watcher v2.0
+            </h1>
           </div>
-          <p className="text-xl text-muted-foreground">Sistema moderno de monitoramento de voos com React</p>
+          <p className="text-xl text-muted-foreground">
+            Sistema moderno de monitoramento de voos com React
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,7 +46,9 @@ function App() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full">Acessar Dashboard</Button>
+              <Button variant="outline" className="w-full">
+                Acessar Dashboard
+              </Button>
             </CardContent>
           </Card>
 
@@ -48,7 +60,9 @@ function App() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="secondary" className="w-full">Gerenciar Rotas</Button>
+              <Button variant="secondary" className="w-full">
+                Gerenciar Rotas
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -66,7 +80,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
