@@ -60,7 +60,7 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
-uvicorn main_api:app --reload --port 8000
+uvicorn main_api:app --reload --port 8001
 ```
 
 #### 2. Frontend (React)
@@ -74,8 +74,8 @@ npm run dev
 Acesse:
 
 - **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **Documentação API**: http://localhost:8000/docs
+- **Backend API**: http://localhost:8001
+- **Documentação API**: http://localhost:8001/docs
 
 ### Docker (Recomendado)
 
@@ -126,7 +126,7 @@ O frontend se comunica com o backend via fetch:
 
 ```typescript
 // services/api.ts
-const API_BASE = "http://localhost:8000";
+const API_BASE = "http://localhost:8001";
 
 export const api = {
   getOffers: () => fetch(`${API_BASE}/api/offers/`).then((r) => r.json()),

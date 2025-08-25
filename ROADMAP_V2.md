@@ -53,7 +53,7 @@ git push origin release/v1.1.0
 ```
 ┌─────────────────┐    ┌──────────────────────┐
 │   React Frontend │    │   FastAPI Backend    │
-│   (Port 3000)    │────│   (Port 8000)       │
+│   (Port 5173)    │────│   (Port 8001)       │
 │                 │    │                      │
 │   - Components   │    │   - Same API routes  │
 │   - State Mgmt   │    │   - Same responses   │

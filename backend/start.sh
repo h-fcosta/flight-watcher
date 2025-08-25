@@ -45,8 +45,8 @@ fi
 
 # Iniciar aplicação web
 echo -e "${GREEN}🌐 Iniciando aplicação web...${NC}"
-echo "🔗 Acesse: http://localhost:8000"
-echo "📚 API Docs: http://localhost:8000/docs"
+echo "🔗 Acesse: http://localhost:8001"
+echo "📚 API Docs: http://localhost:8001/docs"
 echo ""
 echo -e "${YELLOW}Pressione Ctrl+C para parar${NC}"
 echo ""
